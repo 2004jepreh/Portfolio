@@ -9,6 +9,7 @@ const routes = [
 ]
 
 export default createRouter({
-  history: createWebHistory(),
+  // BASE_URL otomatis berisi '/portfolio/' dari vite.config.js
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })

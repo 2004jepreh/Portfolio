@@ -7,10 +7,14 @@
 // - launch:  ditampilkan sebagai "End date".
 // - recognition: isi [] kalau tidak ada, barisnya otomatis hilang.
 // - swatches: 3 warna kecil di sisi kanan layar.
+//
+// Path gambar tetap ditulis seperti biasa ('/projects/nama.png', file ada di public/projects/).
+// Di bagian paling bawah file ini, path itu otomatis diberi alamat dasar situs
+// (/portfolio/ saat di GitHub Pages), jadi tidak perlu diubah manual.
 const aboutPlaceholder =
   'A placeholder paragraph about this project. Describe the challenge you were given, how you approached it, and the result. Keep it to five or six lines so it sits comfortably beside the gallery.'
 
-export const projects = [
+const rawProjects = [
   {
     slug: 'planner-in',
     category: 'Productivity Hub',
@@ -167,3 +171,16 @@ export const projects = [
     gallery: [],
   },
 ]
+
+// Menambahkan alamat dasar situs ke path gambar yang diawali "/"
+// (BASE_URL = '/' saat lokal tanpa base, '/portfolio/' di GitHub Pages)
+const withBase = (path) => {
+  if (!path || !path.startsWith('/')) return path // null, atau sudah URL penuh (https://...)
+  return `${import.meta.env.BASE_URL}${path.slice(1)}`
+}
+
+export const projects = rawProjects.map((p) => ({
+  ...p,
+  image: withBase(p.image),
+  gallery: (p.gallery || []).map(withBase),
+}))
