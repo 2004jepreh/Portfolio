@@ -1,4 +1,4 @@
-# Jeffrey Ali — Portfolio
+# My Portfolio
 
 Vue 3 + Vite + Vue Router + GSAP.
 
