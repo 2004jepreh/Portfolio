@@ -1,0 +1,20 @@
+# Dependensi dan hasil build
+node_modules
+dist
+dist-ssr
+
+# Variabel lingkungan (jangan sampai terunggah)
+.env
+.env.*
+!.env.example
+
+# Log
+*.log
+npm-debug.log*
+
+# Editor dan sistem
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db

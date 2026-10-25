@@ -1,0 +1,99 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0d0d0d;
+  --fg: #f1efe9;
+  --muted: #7a7a78;
+  --accent: #ff5b3a;
+  --pad: 18px;
+  --c2: 13.3vw; /* kolom kedua (Menu, nav, Launch) */
+  --font: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Chakra Petch', 'Inter Tight', sans-serif; /* khusus nama project */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.label {
+  color: var(--muted);
+}
+
+/* Halaman non-Work */
+.page {
+  position: fixed;
+  inset: 0;
+  padding: 0 var(--pad);
+}
+
+/* Transisi antar halaman */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.4s var(--ease);
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+/* Transisi kecil untuk teks yang berganti */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.35s var(--ease);
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --c2: 88px;
+  }
+}
