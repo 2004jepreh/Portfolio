@@ -26,7 +26,17 @@ const onSelect = (i) => (i === active.value ? openProject(projects[i].slug) : go
     <ProjectMeta :project="current" />
     <ProjectCounter :index="active" :total="projects.length" />
 
-    <p class="work__mobile-title">{{ current.title }}</p>
+    <!-- Khusus HP: tanggal + judul dalam satu kotak, supaya judul panjang (2-3 baris)
+         tidak menimpa tanggal. Disembunyikan di laptop lewat CSS. -->
+    <Transition name="fade" mode="out-in">
+      <div :key="current.slug" class="work__mobile">
+        <span class="work__mobile-date">
+          <span class="label">End date</span>
+          <span>{{ current.launch }}</span>
+        </span>
+        <p class="work__mobile-title">{{ current.title }}</p>
+      </div>
+    </Transition>
 
     <span class="work__scroll label">Scroll</span>
 
@@ -70,27 +80,44 @@ const onSelect = (i) => (i === active.value ? openProject(projects[i].slug) : go
   transition: background 0.4s ease;
 }
 
-.work__mobile-title {
+.work__mobile {
   display: none;
 }
 
+/* HP: tanggal + judul ditumpuk dari tepi bawah layar. Judul yang panjang tumbuh
+   ke atas dan mendorong tanggal, jadi tidak pernah bertumpuk. */
 @media (max-width: 900px) {
-  .work__mobile-title {
-    display: block;
+  .work__mobile {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 76vh;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: 112px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     text-align: center;
+    pointer-events: none;
+  }
+  .work__mobile-date {
+    display: flex;
+    gap: 14px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .work__mobile-title {
     font-family: var(--font-display);
     font-size: 22px;
     font-weight: 400;
+    line-height: 1.15;
     letter-spacing: 0.02em;
     text-transform: uppercase;
+    text-wrap: balance;
   }
   .work__swatches {
     top: auto;
-    bottom: 60px;
+    bottom: 28px;
+    right: var(--pad);
   }
   .work__scroll {
     display: none;

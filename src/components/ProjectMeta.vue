@@ -61,14 +61,10 @@ defineProps({
   margin-top: 66px;
 }
 
+/* HP: Role dan End date ditampilkan oleh WorkView (bersama judul) supaya tidak bertumpuk */
 @media (max-width: 900px) {
-  .meta__role {
-    display: none;
-  }
+  .meta__role,
   .meta__col {
-    top: 66vh;
-  }
-  .meta__recognition {
     display: none;
   }
 }

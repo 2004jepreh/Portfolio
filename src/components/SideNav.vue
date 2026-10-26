@@ -98,5 +98,12 @@ const toggleContact = () => (contactOpen.value ? closeContact() : openContact())
   .nav__link {
     font-size: 20px;
   }
+  /* Di HP, menu aktif cukup ditandai warna. Panah dimatikan supaya lebar menu tetap
+     dan tidak menimpa email di kanan. */
+  .nav__link.is-active .nav__arrow {
+    max-width: 0;
+    margin-right: 0;
+    opacity: 0;
+  }
 }
 </style>

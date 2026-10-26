@@ -182,6 +182,10 @@ const faceStyle = (i) => ({
 }
 
 @media (max-width: 900px) {
+  .header {
+    --logo-w: 44px;
+    height: 112px;
+  }
   .header__status {
     display: none;
   }
@@ -190,6 +194,47 @@ const faceStyle = (i) => ({
   }
   .header__mail .label {
     display: none;
+  }
+
+  /* Logo diperkecil supaya tidak menimpa menu dan konten */
+  .logo {
+    top: 20px;
+    height: 84px;
+    perspective: 320px;
+  }
+  .logo__face {
+    border-width: 1.2px;
+  }
+  .logo__top {
+    padding: 3px 0;
+    border-bottom-width: 1.2px;
+    font-size: 8px;
+  }
+  .logo__top--long {
+    font-size: 6.5px;
+  }
+  .logo__mark {
+    font-size: 24px;
+  }
+  .logo__mark--small {
+    font-size: 15px;
+  }
+  .logo__icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Email: ukuran mengikuti lebar layar, dibatasi supaya tidak menabrak menu di kiri */
+  .header__mail {
+    top: 22px;
+    max-width: calc(100vw - 88px - 92px - var(--pad) - 8px);
+    justify-content: flex-end;
+    text-align: right;
+    font-size: clamp(9.5px, 2.9vw, 12px);
+    line-height: 1.25;
+  }
+  .header__mail a {
+    overflow-wrap: anywhere;
   }
 }
 </style>

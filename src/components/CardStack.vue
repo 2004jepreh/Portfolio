@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   projects: { type: Array, required: true },
@@ -9,6 +9,19 @@ const emit = defineEmits(['open', 'select'])
 
 // Membungkus jarak ke rentang [-n/2, n/2) supaya kartu berputar tanpa ujung.
 const wrap = (d, n) => ((((d + n / 2) % n) + n) % n) - n / 2
+
+// Ukuran layar: dipakai untuk menghitung susunan kartu khusus HP.
+// Susunan laptop (di atas 900px) tidak berubah.
+const MOBILE_QUERY = '(max-width: 900px)'
+const mobile = ref(false)
+const viewW = ref(0)
+const viewH = ref(0)
+const syncViewport = () => {
+  mobile.value = window.matchMedia(MOBILE_QUERY).matches
+  viewW.value = window.innerWidth
+  viewH.value = window.innerHeight
+}
+syncViewport()
 
 // Latar kartu otomatis: warna diambil dari tepi atas gambar (kiri ke kanan).
 // Dipakai kalau `cardBg: 'auto'` di data project.
@@ -56,9 +69,15 @@ const sampleBackground = (project) =>
   })
 
 onMounted(() => {
+  syncViewport()
+  window.addEventListener('resize', syncViewport)
   props.projects.forEach((p) => {
     if (p.cardBg === 'auto' && p.image) sampleBackground(p)
   })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', syncViewport)
 })
 
 const backgroundFor = (project) => {
@@ -71,6 +90,11 @@ const backgroundFor = (project) => {
 // dan dikipas ke samping sehingga beberapa kartu mengintip di atas dan bawah.
 const cards = computed(() => {
   const n = props.projects.length
+  const m = mobile.value
+
+  // Tinggi kartu di HP (harus sama dengan CSS: lebar = min(62vw, 46svh), rasio 5:4).
+  const cardH = Math.min(viewW.value * 0.62, viewH.value * 0.46) * 0.8
+
   return props.projects.map((project, i) => {
     const d = wrap(i - props.progress, n)
     const ad = Math.abs(d)
@@ -78,14 +102,26 @@ const cards = computed(() => {
     const near = Math.min(ad, 1) // bagian jarak dari tengah sampai kartu terdekat
     const far = Math.max(0, ad - 1) // bagian jarak di belakang kartu terdekat
 
-    const x = -s * (9 * near + 5.5 * far) // vw
-    const y = s * (40 * near + 7 * far) // vh
+    // Laptop: jarak dalam vw/vh. HP: geser sedikit, jarak vertikal dari tinggi kartu (px)
+    // supaya kartu di belakang hanya mengintip tipis dan tidak naik ke area header.
+    const x = m ? -s * (5 * near + 3 * far) : -s * (9 * near + 5.5 * far) // vw
+    const y = m
+      ? s * (0.62 * cardH * near + 0.07 * cardH * far) // px
+      : s * (40 * near + 7 * far) // vh
+    const yUnit = m ? 'px' : 'vh'
     const tilt = 7.5 * Math.min(d * d, 1) + far * 2.5 // derajat
     const rotY = d * 8
     const scale = 1 - far * 0.06
 
-    // Penuh sampai ad 2.6, lalu memudar habis di ad 3 (supaya tidak "loncat" saat berputar).
-    const opacity = ad <= 2.6 ? 1 : Math.max(0, 1 - (ad - 2.6) * 2.5)
+    // Laptop: penuh sampai ad 2.6, lalu memudar habis di ad 3 (supaya tidak "loncat" saat berputar).
+    // HP: hanya dua kartu di tiap sisi yang terlihat.
+    const opacity = m
+      ? ad <= 1.6
+        ? 1
+        : Math.max(0, 1 - (ad - 1.6) * 2.5)
+      : ad <= 2.6
+        ? 1
+        : Math.max(0, 1 - (ad - 2.6) * 2.5)
 
     return {
       project,
@@ -96,7 +132,7 @@ const cards = computed(() => {
         background: backgroundFor(project),
         zIndex: Math.round(100 - ad * 10),
         pointerEvents: ad > 1.6 ? 'none' : 'auto',
-        transform: `translate3d(-50%, -50%, 0) translate3d(${x}vw, ${y}vh, 0) rotateY(${rotY}deg) rotateZ(${tilt}deg) scale(${scale})`,
+        transform: `translate3d(-50%, -50%, 0) translate3d(${x}vw, ${y}${yUnit}, 0) rotateY(${rotY}deg) rotateZ(${tilt}deg) scale(${scale})`,
       },
     }
   })
@@ -198,8 +234,9 @@ const onCardClick = (card) => {
 
 @media (max-width: 900px) {
   .card {
-    width: 62vw;
-    top: 48%;
+    /* Rumus ini harus sama dengan cardH di script */
+    width: min(62vw, 46svh);
+    top: 43%;
   }
 }
 </style>

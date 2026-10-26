@@ -528,12 +528,15 @@ onBeforeUnmount(() => {
   .project {
     display: flex;
     flex-direction: column;
+    /* Isi memudar di bawah header (logo + menu) supaya tidak bertumpuk saat di-scroll */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 84px, #000 124px);
+    mask-image: linear-gradient(to bottom, transparent 0, transparent 84px, #000 124px);
   }
   .info {
     order: 1;
     position: static;
     width: auto;
-    padding: 130px var(--pad) 0;
+    padding: 136px var(--pad) 0;
   }
   .info__facts {
     grid-template-columns: 91px 1fr;

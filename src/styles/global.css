@@ -96,4 +96,13 @@ ul {
   :root {
     --c2: 88px;
   }
+
+  /* Halaman About dan detail project yang bisa di-scroll: isi memudar di bawah header
+     (logo + menu) supaya tidak bertumpuk. Diatur di satu tempat agar keduanya selalu sama.
+     !important supaya tidak tertimpa aturan di masing-masing halaman. */
+  .about,
+  .project {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 84px, #000 124px) !important;
+    mask-image: linear-gradient(to bottom, transparent 0, transparent 84px, #000 124px) !important;
+  }
 }

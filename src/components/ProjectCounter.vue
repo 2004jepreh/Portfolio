@@ -78,22 +78,26 @@ const pad = (n) => String(n).padStart(2, '0')
   transform: translateY(-35%);
 }
 
+/* HP: ukuran angka mengikuti lebar layar; "/06" dan "Selected work" ikut menyesuaikan */
 @media (max-width: 900px) {
-  .counter__label {
-    top: auto;
-    bottom: 22px;
-    left: 88px;
+  .counter {
+    --num: clamp(52px, 17vw, 84px);
   }
   .counter__number {
     left: var(--pad);
     top: auto;
-    bottom: 40px;
-    font-size: 96px;
+    bottom: 24px;
+    font-size: var(--num);
   }
   .counter__total {
-    left: calc(var(--pad) + 96px * 1.2 + 4px);
+    left: calc(var(--pad) + var(--num) * 1.2 + 4px);
     top: auto;
-    bottom: 120px;
+    bottom: calc(24px + var(--num) * 0.8 - 15px);
+  }
+  .counter__label {
+    top: auto;
+    bottom: 26px;
+    left: calc(var(--pad) + var(--num) * 1.2 + 44px);
   }
 }
 </style>
